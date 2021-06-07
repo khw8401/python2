@@ -1,0 +1,102 @@
+p.199
+
+# 2번
+
+(1) 마당서점 도서의 총 개수
+: select count(DISTINCT bookname) from book;
+
+(2) 마당서점에 도서를 출고하는 출판사의 총 개수
+: select count(DISTINCT publisher) from book;
+
+(3) 모든 고객의 이름, 주소
+: select name, address from customer;
+
+(4) 2014년7월 4일 ~ 7월 7일 사이에 주문받은 도서의 주문번호
+: select orderid from orders where orderdate BETWEEN '20140704' AND '20140707'
+
+(5) 2014년 7월 4일 ~7월 7일 사이에 주문받은 도서를 제외한 도서의 주문번호
+: select orderid from orders where orderdate NOT BETWEEN '20140704' AND '20140707'
+
+(6) 성이 '김'씨인 고객의 이름과 주소
+: select name, address from customer where name LIKE '김_%';
+
+(7) 성이 '김'씨이고 이름이 '아'로 끝나는 고객의 이름과 주소
+: select name, address from customer where name LIKE '김_아%';
+
+(8) 주문하지 않은 고객의 이름(부속질의 사용)
+: select name from customer where name NOT IN 
+(select name from customer, orders where customer.custid = orders.custid);
+
+(9) 주문 금액의 총액과 주문의 평균 금액
+: select SUM(saleprice), AVG(saleprice) from orders;
+
+(10) 고객의 이름과 고객별 구매액
+: select name, SUM(saleprice) from customer, orders where customer.custid = orders.custid group by customer.name;
+
+(11) 고객의 이름과 고객이 구매한 도서 목록
+: select name, bookname from customer, orders, book 
+where customer.custid = orders.custid and orders.bookid = book.bookid;
+
+(12) 도서의 가격과 판매가격의 차이가 가장 많은 주문
+: select *  from book, orders where book.bookid = orders.bookid
+and price - saleprice = (select MAX(price - saleprice) from book, orders where book.bookid = orders.bookid);
+
+(13) 도서의 판매액 평균보다 자신의 구매액 평균이 더 높은 고객의 이름
+: select name, AVG(saleprice) from customer, orders where customer.custid = orders.custid 
+GROUP BY name 
+HAVING AVG(saleprice) > (select AVG(saleprice) from orders); 
+
+p.183
+
+CREATE TABLE  Newbook(
+bookid INTEGER,
+bookname VARCHAR(20),
+publisher VARCHAR(20),
+price INTEGER
+isbn VARCHAR(13)
+);
+
+ALTER TABLE Newbook ADD isbn VARCHAR(13) # 테이블에 isbn 을 추가
+ALTER TABLE Newbook MODIFY isbn INTEGER;   # isbn의 속성을 INTEGER로 변환
+ALTER TABLE Newbook DROP COLUMN isbn;     #  속성 삭제
+ALTER TABLE Newbook MODIFY bookid INTEGER NOT NULL; 
+
+ALTER COLUMN 속성이름 데이터타입 -> MODIFY 속성이름 데이터타입
+ALTER COLUMN 속성이름 NULL -> MODIFY 속성이름 데이터타입 NULL
+
+ALTER TABLE Newbook ADD PRIMARY KEY(bookid);  # 기본키로 변경
+
+
+p.192 update 
+
+select * from customer where custid= 5; 
+
+update customer set address = '대한민국 부산' where custid = 5; 
+
+p.195 delete
+delete from book where bookid = '11';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
