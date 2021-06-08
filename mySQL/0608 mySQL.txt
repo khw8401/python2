@@ -1,0 +1,180 @@
+<백업>
+
+1. 관리자 권한으로 cmd 실행
+
+2. mysql -uroot -p 로그인
+
+show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| mytest_1           |
+| performance_schema |
+| sys                |
++--------------------+
+데이터 베이스 단위로 백업 진행
+
+
+3. 관리자 권한으로 cmd 하나 더 실행
+
+4. C:\WINDOWS\system32>mysqldump -uroot -p7751 mytest_1 > c:\dumptest_20210608.db
+
+- mysqldump는 bin 파일에 들어가면 평소 실행하는 "mysql.exe", 백업을 담당해줄  "mysqldump.exe"를 확인할 수 있음. 
+- C 드라이브에 dumptest_20210608.db 이 생긴 것 확인 가능
+- 메모자을 열어 넣어보면 그 동안 타이핑했던 요소들을 확인 가능
+
+<복원>
+
+1. mysql에서 복원할 빈 DB를 만듦
+
+mysql> CREATE database mytest_1_copy;
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| mytest_1           |
+| mytest_1_copy      |
+| performance_schema |
+| sys                |
++--------------------+
+mysql> use mytest_1_copy;
+Database changed
+mysql> show tables;
+Empty set (0.00 sec)
+
+2. 다른 cmd에 커맨드 입력
+
+C:\WINDOWS\system32>mysql -uroot -p mytest_1_copy < c:\dumptest_20210608.db
+Enter password: ****
+
+3. mysql에서 확인해보기
+
+mysql> show tables;
++-------------------------+
+| Tables_in_mytest_1_copy |
++-------------------------+
+| book                    |
+| customer                |
+| imported_book           |
+| orders                  |
++-------------------------+
+
+
+<csv 파일 읽기>
+
+SELECT @@GlOBAL.secure_file_priv;   <- 저장 위치
+
+C:\ProgramData\MySQL\MySQL Server 8.0\Uploads\
+
+create table csv_test(
+fam_name VARCHAR(2),
+name VARCHAR(4),
+grade INTEGER);  
+
+desc csv_table 
+
+load data infile 'C:\ProgramData\MySQL\MySQL Server 8.0\Uploads/test.csv' <- 가져오는 법 
+into table csv_test                                                                             <- 테이블에 넣는 법
+fields terminated by ','
+enclosed by  '"'
+lines terminated by '\n'
+ignore 1 rows;
+
+select * from csv_test;
+
+
+ SELECT A.orderdate, priceeach*quantityordered FROM orders A LEFT JOIN orderdetails B ON A.ordernumber B.ordernumber;
+
+select
+substr(A.orderdate, 1,4) YY,
+count(distinct customernumber) N_PURCHASER,
+sum(priceeach*quantityordered) AS SALES,
+sum(priceeach*quantityordered)/ count(distinct A.customernumber) AMV
+from orders A
+LEFT JOIN orderdetails B
+ON A.ordernumber = B.ordernumber
+group by 1;
+
+
+
+# p.125 상품 리뷰 데이터를 이용한 리포트 작성
+
+load data infile 'C:/mysql/Womens Clothing E-Commerce Reviews.csv'
+into table dataset2                                                                         
+fields terminated by ','
+enclosed by  '"'
+lines terminated by '\n'
+ignore 1 rows;
+
+create table dataset2(
+SN INTEGER,
+ClothingID INTEGER,
+Age INTEGER,
+Title VARCHAR(55),
+Review_Text VARCHAR(510),
+Rating INTEGER,
+Recommended_IND INTEGER,
+Positive_Feedback_Count INTEGER,
+Division_Name VARCHAR(20),
+Department_Name VARCHAR(10),
+Class_Name VARCHAR(20));
+
+
+
+- DIVISION_NAME 별 평균 평점
+select DIVISION_NAME,
+AVG(RATING) AVG_RATE
+FROM DATASET2
+GROUP BY 1
+ORDER BY 2 DESC;
+
+- Department_name별 평균 평점
+select Department_name,
+AVG(RATING) AVG_RATE
+FROM DATASET2
+GROUP BY 1
+ORDER BY 2 DESC;
+
+- Trend의 평점 3점 이하 리뷰
+select * from dataset2 where department_name = 'trend' AND RATING <= 3;
+
+select substr(Review_Text,1,100) from dataset2
+where Rating <=3 and department_name = 'trend';
+
+select count from dataset2
+where Rating <=3 and department_name = 'trend';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

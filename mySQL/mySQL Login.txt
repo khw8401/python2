@@ -1,0 +1,7 @@
+mySQL Login
+
+cd c:\mysql\bin
+
+mysql -uroot -p
+
+password : 1234
