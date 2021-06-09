@@ -1,0 +1,36 @@
+p.245
+- 타이타닉 호 데이터 분석
+
+create database titanic;
+
+
+load data infile 'C:/mysql/full.csv'
+into table titanic                                                                        
+fields terminated by ','
+enclosed by  '"'
+lines terminated by '\n'
+ignore 1 rows;
+
+
+create table titanic(
+PassengerId INTEGER,
+Survived VARCHAR(2),
+Pclass INTEGER,
+Name VARCHAR(85),
+Sex VARCHAR(10),
+Age VARCHAR(10),
+SibSp INTEGER,
+Parch INTEGER,
+Ticket VARCHAR(20),
+Fare VARCHAR(20),
+Cabin VARCHAR(20),
+Embarked VARCHAR(2),
+Hometown VARCHAR(50),
+Boarded VARCHAR(50),
+Destination VARCHAR(40),
+Lifeboat VARCHAR(50),
+Body VARCHAR(15)
+);
+
+
+
